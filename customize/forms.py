@@ -1,4 +1,18 @@
 from django import forms
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm
+from .models import MyUser
+
+
+class CustomUserCreationForm(UserCreationForm):
+    class Meta(UserCreationForm):
+        model = MyUser
+        fields = ('display_name', 'homepage', 'age')
+
+class CustomUserChangeForm(UserChangeForm):
+    class Meta:
+        model = MyUser
+        fields = ('display_name', 'homepage', 'age')
+
 
 class LoginForm(forms.Form):
     username = forms.CharField(max_length=50)
