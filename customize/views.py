@@ -1,6 +1,5 @@
 from django.shortcuts import render, reverse, HttpResponseRedirect, redirect
 from django.contrib.auth import login, logout, authenticate
-from django.contrib.auth.decorators import login_required
 from custom_user.settings import AUTH_USER_MODEL
 from customize.forms import LoginForm, SignupForm
 from customize.models import MyUser
