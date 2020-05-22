@@ -1,12 +1,17 @@
-from django.shortcuts import render, reverse, HttpResponseRedirect
+from django.shortcuts import render, reverse, HttpResponseRedirect, redirect
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
+from custom_user.settings import AUTH_USER_MODEL
 from customize.forms import LoginForm, SignupForm
+from customize.models import MyUser
 
 # Create your views here.
-@login_required
 def index(request):
-    return render(request, 'index.html')
+    auth_stuff = AUTH_USER_MODEL
+    if request.user.is_authenticated:
+        user_info = request.user
+        return render(request, 'index.html', {'user_info': user_info, 'auth_stuff': auth_stuff})
+    return redirect("/login/")
 
 
 def login_view(request):
@@ -27,21 +32,21 @@ def login_view(request):
 
 
 def signup(request):
-    if request == "POST":
+    if request.method == "POST":
         form = SignupForm(request.POST)
         if form.is_valid():
             user_info = form.cleaned_data
             MyUser.objects.create(
                 username = user_info['username'],
-                password = user_info['password'],
                 display_name = user_info['display_name'],
                 homepage = user_info['homepage'],
                 age = user_info['age']
             )
-            new_user = MyUser.objects.last()
-            login(request, new_user)
+            user = MyUser.objects.last()
+            user.set_password(user_info['password'])
+            user.save()
+            login(request, user)
             return HttpResponseRedirect(reverse('home'))
-        return render(request, 'signup.html', {'form': form})
     form = SignupForm()
     return render(request, 'signup.html', {'form': form})
 

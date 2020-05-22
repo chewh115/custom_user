@@ -1,3 +1,10 @@
 {%extends 'base.html'%} {%block content%}
-<h1>Hello, World!</h1>
+<h1>Hello {{user_info.display_name}}!</h1>
+<p>Your username is {{user_info.username}}</p>
+<p>Your display name is {{user_info.display_name}}</p>
+<p>Your age is {{user_info.age}}</p>
+{% if user_info.homepage %}
+<p>Your homepage is {{user_info.homepage}}s</p>
+{% endif %}
+<p>Your settings.AUTH_USER_MODEL is {{auth_stuff}}</p>
 {% endblock %}
